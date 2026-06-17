@@ -23,10 +23,11 @@ namespace linne
         static std::mutex _mutex;
     };
 
-#define TRACE(format, ...) linne::Logger::getLogger()->trace(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
-#define DBG(format, ...) linne::Logger::getLogger()->debug(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
-#define INFO(format, ...) linne::Logger::getLogger()->info(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
-#define WARN(format, ...) linne::Logger::getLogger()->warn(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
-#define ERR(format, ...) linne::Logger::getLogger()->error(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
-#define CRIT(format, ...) linne::Logger::getLogger()->critical(std::string("[{:>10s}:{:<4d}]") + fomat, __FILE__, __LINE__, __VA_ARGS__)
+#define TRACE(format, ...) linne::Logger::getLogger()->trace(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+#define DBG(format, ...) linne::Logger::getLogger()->debug(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+#define INFO(format, ...) linne::Logger::getLogger()->info(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+#define WARN(format, ...) linne::Logger::getLogger()->warn(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+#define ERR(format, ...) linne::Logger::getLogger()->error(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+#define CRIT(format, ...) linne::Logger::getLogger()->critical(std::string("[{:>10s}:{:<4d}]") + format, __FILE__, __LINE__, ##__VA_ARGS__)
+
 } // namespace linne
