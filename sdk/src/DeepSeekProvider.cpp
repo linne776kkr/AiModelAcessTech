@@ -138,8 +138,8 @@ namespace ai_chat_sdk
             }
         }
         // responseBody反序列化失败
-        // 走到这里说名反序列化解析失败
-        ERR("DeepSeekProvider sendMessage failed, failed to parse response body");
+        // 走到这里说明反序列化解析失败
+        ERR("DeepSeekProvider sendMessage failed, failed to parse response body, error: {}", responseError);
         return "";
     }
     // 发送消息，增量返回
@@ -290,7 +290,6 @@ namespace ai_chat_sdk
         if (!request)
         {
             // 请求发送失败
-            // ERR("DeepSeekProvider seneMessageStream failed, http request failed{}", request.error());
             ERR("DeepSeekProvider sendMessageStream failed, http request failed: {}", httplib::to_string(request.error()));
             return "";
         }
