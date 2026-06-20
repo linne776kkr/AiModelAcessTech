@@ -10,7 +10,8 @@ set(CMAKE_BUILD_TYPE Debug)
 #添加可执行文件
 add_executable(testLLM LLMtest.cpp
 ../sdk/src/util/myLog.cpp
-../sdk/src/DeepSeekProvider.cpp)
+../sdk/src/DeepSeekProvider.cpp
+../sdk/src/ChatGPTProvider.cpp)
 #设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 #添加头文件搜索路径
