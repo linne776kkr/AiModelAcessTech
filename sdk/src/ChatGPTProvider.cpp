@@ -150,7 +150,7 @@ namespace ai_chat_sdk
         return "";
     }
     // 发送消息，增量返回
-    std::string ChatGPTProvider::seneMessageStream(const std::vector<Message> &messages,
+    std::string ChatGPTProvider::sendMessageStream(const std::vector<Message> &messages,
                                                    const std::map<std::string, std::string> &requestParam,
                                                    std::function<void(const std::string &, bool)> callback)
     {

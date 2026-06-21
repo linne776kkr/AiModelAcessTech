@@ -22,7 +22,7 @@ namespace ai_chat_sdk
         virtual std::string sendMessage(const std::vector<Message> &messages, const std::map<std::string, std::string> &requestParam) = 0;
         // 发送消息，增量返回
         // callback:第一个参数为增量参数,第二个参数为是否结束标志
-        virtual std::string seneMessageStream(const std::vector<Message> &messages,
+        virtual std::string sendMessageStream(const std::vector<Message> &messages,
                                               const std::map<std::string, std::string> &requestParam,
                                               std::function<void(const std::string &, bool)> callback) = 0;
 

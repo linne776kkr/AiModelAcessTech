@@ -45,7 +45,7 @@ TEST(ChatGPTProviderTest, sendMessage)
     ASSERT_EQ(provider->isAvailable(), true);
     // 构造消息
     //std::string response = provider->sendMessage({{"user", "你好"}}, {{"temperature", "0.5"}, {"maxTokens", "2048"}});
-    std::string response = provider->seneMessageStream({{"user", "你好,帮我生成一篇700字小作文,有关魔女之旅伊蕾娜的"}}, {{"temperature", "0.5"}, {"maxTokens", "2048"}}, callback);
+    std::string response = provider->sendMessageStream({{"user", "你好,帮我生成一篇700字小作文,有关魔女之旅伊蕾娜的"}}, {{"temperature", "0.5"}, {"maxTokens", "2048"}}, callback);
     ASSERT_FALSE(response.empty());
 }
 
