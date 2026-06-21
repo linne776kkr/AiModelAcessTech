@@ -106,7 +106,7 @@ namespace ai_chat_sdk
         auto request = client.send(req);
         if (!request)
         {
-            ERR("DeepSeekProvider sendMessage failed, http request failed");
+            ERR("DeepSeekProvider sendMessage failed, http request failed: {}", httplib::to_string(request.error()));
             return "";
         }
         if (request->status != 200)
