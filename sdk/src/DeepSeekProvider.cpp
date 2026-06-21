@@ -90,7 +90,7 @@ namespace ai_chat_sdk
         // 5.使用cpp-httplib构建HTTP客户端
         httplib::Client client(_endpoint.c_str());
         client.set_connection_timeout(30, 0); // 设置连接超时时间为30秒
-        client.set_read_timeout(60, 0);       // 设置读取超时时间为30秒
+        client.set_read_timeout(60, 0);       // 设置读取超时时间为60秒
         // 设置请求头
         httplib::Headers headers = {
             {"Authorization", "Bearer " + _apiKey},
