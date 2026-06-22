@@ -150,7 +150,7 @@ namespace ai_chat_sdk
         // 1.检查模型是否可用
         if (_isAvailable == false)
         {
-            ERR("DeepSeekProvider seneMessageStream failed, model is not available");
+            ERR("DeepSeekProvider sendMessageStream failed, model is not available");
             return "";
         }
         // 2.构造请求参数
@@ -186,7 +186,7 @@ namespace ai_chat_sdk
         Json::StreamWriterBuilder writerBuilder;
         writerBuilder["indentation"] = ""; // 去除缩进和换行
         std::string requestBodyStr = Json::writeString(writerBuilder, requestBody);
-        INFO("DeepSeekProvider seneMessageStream request body:{}", requestBodyStr);
+        INFO("DeepSeekProvider sendMessageStream request body:{}", requestBodyStr);
         // 5.使用cpp-httplib构建HTTP客户端
         httplib::Client client(_endpoint.c_str());
         client.set_connection_timeout(30, 0); // 设置连接超时时间为30秒
@@ -212,7 +212,7 @@ namespace ai_chat_sdk
         {
             if (response.status != 200)
             {
-                ERR("DeepSeekProvider seneMessageStream failed, http response status code:{}", response.status);
+                ERR("DeepSeekProvider sendMessageStream failed, http response status code:{}", response.status);
                 gotError = true;
                 return false;
             }
@@ -275,12 +275,12 @@ namespace ai_chat_sdk
                         }
                     }
                     // responseBody反序列化失败
-                    WARN("DeepSeekProvider seneMessageStream failed to parse chunk json: {}, error: {}", jsonStr, responseError);
+                    WARN("DeepSeekProvider sendMessageStream failed to parse chunk json: {}, error: {}", jsonStr, responseError);
                 }
                 else
                 {
                     // 数据块格式错误，既不是空行，也不是以data:开头的json字符串
-                    WARN("DeepSeekProvider seneMessageStream failed, invalid chunk format:{}", chunk);
+                    WARN("DeepSeekProvider sendMessageStream failed, invalid chunk format:{}", chunk);
                 }
             }
             return true;
@@ -296,11 +296,11 @@ namespace ai_chat_sdk
         if (!streamFinish)
         {
             // 流式返回异常结束
-            WARN("DeepSeekProvider seneMessageStream failed, stream not finish");
+            WARN("DeepSeekProvider sendMessageStream failed, stream not finish");
             callback("", true);
             return "";
         }
-        INFO("DeepSeekProvider seneMessageStream success, full response:{}", fullResponse);
+        INFO("DeepSeekProvider sendMessageStream success, full response:{}", fullResponse);
         return fullResponse;
     }
 }//end namespace ai_chat_sdk

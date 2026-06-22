@@ -157,7 +157,7 @@ namespace ai_chat_sdk
         // 1.检查模型是否可用
         if (_isAvailable == false)
         {
-            ERR("ChatGPTProvider seneMessageStream failed, model is not available");
+            ERR("ChatGPTProvider sendMessageStream failed, model is not available");
             return "";
         }
         // 2.构建请求参数
@@ -202,7 +202,7 @@ namespace ai_chat_sdk
         Json::StreamWriterBuilder writerBuilder;
         writerBuilder["indentation"] = ""; // 去除json字符串中的空格和换行
         std::string requestBodyStr = Json::writeString(writerBuilder, requestBody);
-        INFO("ChatGPTProvider seneMessageStream request body:{}", requestBodyStr);
+        INFO("ChatGPTProvider sendMessageStream request body:{}", requestBodyStr);
         // 5.使用cpp-httplib构建HTTP客户端
         httplib::Client client(_endpoint.c_str());
         client.set_connection_timeout(60, 0); // 设置连接超时时间为60秒
@@ -228,8 +228,8 @@ namespace ai_chat_sdk
         req.response_handler = [&](const httplib::Response &response)
         {
             if (response.status != 200)
-            {
-                ERR("ChatGPTProvider seneMessageStream failed, http response status code:{}", response.status);
+                {
+                ERR("ChatGPTProvider sendMessageStream failed, http response status code:{}", response.status);
                 gotError = true;
                 return false; // 返回false表示停止接收响应
             }
@@ -250,7 +250,7 @@ namespace ai_chat_sdk
                 // 从buffer中提取一个数据块
                 std::string chunk = buffer.substr(0, pos);
                 buffer.erase(0, pos + 2);
-                INFO("ChatGPTProvider seneMessageStream received chunk: {}", chunk);
+                INFO("ChatGPTProvider sendMessageStream received chunk: {}", chunk);
                 // 解析该数据块中的数据，流式响应的数据块以data:开头，后面跟着一个json字符串
                 // 处理空行和注释行
                 if (chunk.empty() || chunk[0] == ':')
@@ -318,7 +318,7 @@ namespace ai_chat_sdk
                     }
                     else
                     {
-                        WARN("ChatGPTProvider seneMessageStream received unknown event type: {}, json: {}", eventType, jsonStr);
+                        WARN("ChatGPTProvider sendMessageStream received unknown event type: {}, json: {}", eventType, jsonStr);
                         continue;
                     }
                 }
@@ -336,11 +336,11 @@ namespace ai_chat_sdk
         if (!streamFinish)
         {
             // 流式返回异常结束
-            WARN("ChatGPTProvider seneMessageStream failed, stream not response.completed");
+            WARN("ChatGPTProvider sendMessageStream failed, stream not response.completed");
             callback("", true);
             return "";
         }
-        INFO("ChatGPTProvider seneMessageStream success, full response:{}", fullResponse);
+        INFO("ChatGPTProvider sendMessageStream success, full response:{}", fullResponse);
         return fullResponse;
     }
 } // end namespace ai_chat_sdk
