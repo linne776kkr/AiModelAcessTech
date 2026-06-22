@@ -44,6 +44,7 @@ namespace ai_chat_sdk
                   const std::string &provider, const std::string &endpoint)
             : _modelName(modelName), _modelDesc(modelDesc), _provider(provider),
               _endpoint(endpoint) {}
+        ModelInfo(const std::string &modelName):_modelName(modelName){}
     };
     // 会话信息
     struct Session
