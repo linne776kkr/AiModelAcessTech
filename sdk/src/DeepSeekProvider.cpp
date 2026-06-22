@@ -1,8 +1,6 @@
+#include "../include/DeepSeekProvider.h"
 #include <jsoncpp/json/json.h>
 #include <httplib.h>
-
-#include "../include/DeepSeekProvider.h"
-#include "../include/util/myLog.h"
 
 namespace ai_chat_sdk
 {
