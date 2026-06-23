@@ -3,6 +3,7 @@
 #include <ctime>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace ai_chat_sdk
 {
@@ -12,11 +13,7 @@ namespace ai_chat_sdk
         std::string _messageId; // 消息id
         std::string _role;      // 消息角色
         std::string _content;   // 消息内容
-        std::string _timestamp; // 消息时间戳
-
-        // 构造函数
-        Message(const std::string &role, const std::string &content)
-            : _role(role), _content(content) {}
+        std::time_t _timestamp; // 消息时间戳
     };
     // 模型的公共配置信息
     struct Config
@@ -49,10 +46,11 @@ namespace ai_chat_sdk
     // 会话信息
     struct Session
     {
-        std::string _sessionId;         // 会话id
-        std::string _modelName;         // 模型名称
-        std::vector<Message> _messages; // 会话消息列表
-        std::time_t _createTime;        // 会话创建时间
-        std::time_t _lastUpdateTime;    // 会话最后更新时间
+        std::string _sessionId;                          // 会话id
+        std::string _sessionName;                        // 会话名称
+        std::string _modelName;                          // 模型名称
+        std::vector<std::shared_ptr<Message>> _messages; // 会话消息列表
+        std::time_t _createTime;                         // 会话创建时间
+        std::time_t _lastUpdateTime;                     // 会话最后更新时间
     };
 } // namespace ai_chat_sdk
