@@ -415,6 +415,36 @@ namespace ai_chat_sdk
         sqlite3_finalize(stmt);
         return true;
     }
+    //删除会话表
+    bool DataManager::deleteAllSessions()
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        //构建SQL语句
+        std::string deleteAllSessionsSQL = R"(
+            DELETE FROM sessions
+        )";
+        //准备SQL语句
+        sqlite3_stmt* stmt;
+        int ret = sqlite3_prepare_v2(_db, deleteAllSessionsSQL.c_str(), -1, &stmt, nullptr);
+        if(ret != SQLITE_OK)
+        {
+            ERR("prepare delete all sessions statement failed {}", sqlite3_errmsg(_db));
+            sqlite3_finalize(stmt);
+            return false;
+        }
+        //执行SQL语句
+        ret = sqlite3_step(stmt);
+        if(ret != SQLITE_DONE)
+        {
+            ERR("delete all sessions statement failed {}", sqlite3_errmsg(_db));
+            sqlite3_finalize(stmt);
+            return false;
+        }
+        INFO("delete all sessions success");
+        sqlite3_finalize(stmt);
+        return true;
+    }
+
 
     //类内私有成员函数
     //初始化数据库--创建数据库表

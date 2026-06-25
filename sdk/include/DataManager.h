@@ -35,6 +35,8 @@ namespace ai_chat_sdk
             std::vector<std::shared_ptr<Message>> getSessionMessages(const std::string& sessionId);
             //删除指定会话的所有消息
             bool deleteSessionMessages(const std::string& sessionId);
+            //删除会话表
+            bool deleteAllSessions();
         private:
             //初始化数据库--创建数据库表
             bool initDatabase();
