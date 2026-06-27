@@ -59,7 +59,7 @@ namespace ai_chat_sdk{
             //添加会话到映射
             _sessions[sessionId] = session;
         }
-        INFO("create session, sessionId: %s, modelName: %s, sessionName: %s", sessionId.c_str(), modelName.c_str(), sessionName.c_str());
+        INFO("create session, sessionId: {}, modelName: {}, sessionName: {}", sessionId, modelName, sessionName);
         //将会话添加到数据库
         _dataManager.insertSession(session);
         return sessionId;
@@ -90,34 +90,42 @@ namespace ai_chat_sdk{
     //向指定会话发送消息
     bool SessionManager::addMessage(const std::string& sessionId, const Message& message)
     {
-        std::shared_ptr<Message> msg = nullptr;
-        std::unordered_map<std::string, std::shared_ptr<Session>>::iterator it;
+        std::shared_ptr<Message> msg = nullptr;                                 //将锁中创建的消息指针保存到msg中
+        bool name_flag = false;                                                 //是否更新会话名称
+        std::unordered_map<std::string, std::shared_ptr<Session>>::iterator it; //保存锁中找到的会话
         {
             std::unique_lock<std::mutex> lock(_mutex);
             //根据会话id获取会话
             it = _sessions.find(sessionId);
             if(it == _sessions.end())
             {
-                WARN("session not found, sessionId: %s", sessionId.c_str());
+                WARN("session not found, sessionId: {}", sessionId);
                 return false;
             }
             //创建消息
             msg = std::make_shared<Message>(message);
             msg->_messageId = generateMessageId(it->second->_messages.size());
             msg->_timestamp = time(nullptr);
-            //如果这条消息是会话的第一条消息,则将这条消息的前20个字符作为会话名称
-            if(it->second->_messages.size() == 1)
+            //如果发送这条消息时会话名字为空,则将这条消息的前20个字符作为会话名称
+            if(it->second->_sessionName.empty())
             {
                 it->second->_sessionName = message._content.substr(0,20);
+                name_flag = true;
             }
             //将消息添加到会话
             it->second->_messages.push_back(msg);
             //更新会话最后更新时间戳
             it->second->_lastUpdateTime = time(nullptr);
+            
         }
-        INFO("add message to role: %s, message: %s", msg->_role.c_str(), msg->_content.c_str());
+        INFO("add message to role: {}, message: {}", msg->_role, msg->_content);
         //将消息添加到数据库
         _dataManager.insertMessage(sessionId,msg);
+        if(name_flag)
+        {
+            //更新会话名称
+            _dataManager.updateSessionName(sessionId,it->second->_sessionName);
+        }
         return true;
     }
     //获取指定会话的消息历史记录
@@ -141,7 +149,7 @@ namespace ai_chat_sdk{
             //更新会话最后更新时间戳
             it->second->_lastUpdateTime = timestamp;
         }
-        INFO("update session timestamp, sessionId: %s", sessionId.c_str());
+        INFO("update session timestamp, sessionId: {}", sessionId);
         _dataManager.updateSessionTimestamp(sessionId,timestamp);
         return;
     }
@@ -179,7 +187,7 @@ namespace ai_chat_sdk{
             //删除会话
             _sessions.erase(it);
         }
-        INFO("delete session, sessionId: %s", sessionId.c_str());
+        INFO("delete session, sessionId: {}", sessionId);
         _dataManager.deleteSession(sessionId);
         return true;
     }

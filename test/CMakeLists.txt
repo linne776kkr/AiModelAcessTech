@@ -10,9 +10,13 @@ set(CMAKE_BUILD_TYPE Debug)
 #添加可执行文件
 add_executable(testLLM LLMtest.cpp
 ../sdk/src/util/myLog.cpp
-../sdk/src/DeepSeekProvider.cpp
 ../sdk/src/ChatGPTProvider.cpp
-../sdk/src/OllamaProvider.cpp)
+../sdk/src/ChatSDK.cpp
+../sdk/src/DataManager.cpp
+../sdk/src/DeepSeekProvider.cpp
+../sdk/src/LLMManager.cpp
+../sdk/src/OllamaProvider.cpp
+../sdk/src/SessionManager.cpp)
 #设置输出目录
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 #添加头文件搜索路径
@@ -23,4 +27,4 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 #添加CPPHTTPLIB_OPENSSL_SUPPORT宏定义
 target_compile_definitions(testLLM PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
 #连接库
-target_link_libraries(testLLM jsoncpp fmt spdlog gtest OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(testLLM jsoncpp fmt spdlog gtest OpenSSL::SSL OpenSSL::Crypto sqlite3)

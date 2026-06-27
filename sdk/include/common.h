@@ -21,13 +21,33 @@ namespace ai_chat_sdk
         std::string _modelName; // 模型名称
         double _temperature;    // 温度参数
         int _maxTokens;         // 最大token数
+
+        virtual ~Config() = default;//用于向下转换时的安全性
+        Config(const std::string &modelName, double temperature, int maxTokens)
+            : _modelName(modelName), _temperature(temperature), _maxTokens(maxTokens) {}
+        Config(){}
     };
     // 通过api方式接入云端模型
     struct ApiConfig : public Config
     {
-        std::string _apiKey; // api密钥
+        std::string _apiKey;    // api密钥
+        //构造函数
+        ApiConfig(const std::string &modelName, double temperature, int maxTokens,
+                  const std::string &apiKey)
+            : Config(modelName, temperature, maxTokens), _apiKey(apiKey) {}
+        ApiConfig(){}
     };
     // 通过ollama方式接入本地模型--不需要配置apikey
+    struct OllamaConfig : public Config
+    {
+        std::string _modelDesc; // 模型描述
+        std::string _endpoint;  // 模型endpoint地址
+        //构造函数
+        OllamaConfig(const std::string &modelName, double temperature, int maxTokens,
+                      const std::string &modelDesc, const std::string &endpoint)
+            : Config(modelName, temperature, maxTokens), _modelDesc(modelDesc),_endpoint(endpoint) {}
+        OllamaConfig(){}
+    };
     // LLM信息
     struct ModelInfo
     {
@@ -36,12 +56,6 @@ namespace ai_chat_sdk
         std::string _provider;     // 模型提供方
         std::string _endpoint;     // 模型endpoint地址
         bool _isAvailable = false; // 模型是否可用
-
-        ModelInfo(const std::string &modelName, const std::string &modelDesc,
-                  const std::string &provider, const std::string &endpoint)
-            : _modelName(modelName), _modelDesc(modelDesc), _provider(provider),
-              _endpoint(endpoint) {}
-        ModelInfo(const std::string &modelName):_modelName(modelName){}
     };
     // 会话信息
     struct Session

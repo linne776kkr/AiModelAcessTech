@@ -15,20 +15,20 @@ namespace ai_chat_sdk
         //初始化指定模型
         bool initModel(const std::string &modelName,const std::map<std::string,std::string> &modelConfig);
         //获取可用模型
-        std::vector<ModelInfo> getAvailableModels();
+        std::vector<std::shared_ptr<ModelInfo>> getAvailableModels();
         //检查模型是否可用
         bool isModelAvailable(const std::string &modelName);
         //发送消息给指定模型
         std::string sendMessage(const std::string &modelName,
-                                const std::vector<Message>& messages,
+                                const std::vector<std::shared_ptr<Message>>& messages,
                                 const std::map<std::string,std::string>& requestParam);
         //发送流式返回消息给指定模型
         std::string sendStreamMessage( const std::string& modelName,
-                                const std::vector<Message> &messages,
+                                const std::vector<std::shared_ptr<Message>>& messages,  
                                 const std::map<std::string, std::string> &requestParam,
                                 std::function<void(const std::string &, bool)> callback);
     private:
         std::map<std::string,std::unique_ptr<LLMProvider>> _providers;// 模型提供者映射表
-        std::map<std::string,ModelInfo> _modelInfos;// 模型信息映射表
+        std::map<std::string,std::shared_ptr<ModelInfo>> _modelInfos;// 模型信息映射表
     };
 }

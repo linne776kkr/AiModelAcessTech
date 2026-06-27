@@ -47,7 +47,7 @@ namespace ai_chat_sdk
     {
         return _modelDesc;
     }
-    std::string OllamaProvider::sendMessage(const std::vector<Message> &messages, const std::map<std::string, std::string> &requestParam)
+    std::string OllamaProvider::sendMessage(const std::vector<std::shared_ptr<Message>> &messages, const std::map<std::string, std::string> &requestParam)
     {
         // 1.检查模型是否可用
         if (_isAvailable == false)
@@ -73,8 +73,8 @@ namespace ai_chat_sdk
         for (const auto &message : messages)
         {
             Json::Value messageJson;
-            messageJson["role"] = message._role;
-            messageJson["content"] = message._content;
+            messageJson["role"] = message->_role;
+            messageJson["content"] = message->_content;
             messageArray.append(messageJson);
         }
         // 3.构造请求体
@@ -135,7 +135,7 @@ namespace ai_chat_sdk
         ERR("OllamaProvider sendMessage failed, parse response body failed:{}", responseError);
         return "";
     }
-    std::string OllamaProvider::sendMessageStream(const std::vector<Message> &messages,
+    std::string OllamaProvider::sendMessageStream(const std::vector<std::shared_ptr<Message>> &messages,
                                                   const std::map<std::string, std::string> &requestParam,
                                                   std::function<void(const std::string &, bool)> callback)
     {
@@ -163,8 +163,8 @@ namespace ai_chat_sdk
         for (const auto &message : messages)
         {
             Json::Value messageJson;
-            messageJson["role"] = message._role;
-            messageJson["content"] = message._content;
+            messageJson["role"] = message->_role;
+            messageJson["content"] = message->_content;
             messageArray.append(messageJson);
         }
         // 3.构造请求体

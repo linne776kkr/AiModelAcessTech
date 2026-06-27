@@ -14,15 +14,14 @@ namespace ai_chat_sdk
             _isAvailable = false;
             return false;
         }
-        _apiKey = it->second;
+        else _apiKey = it->second;
         it = modelConfig.find("endpoint");
         if (it == modelConfig.end())
         {
-            ERR("DeepSeekProvider initModel failed, missing endpoint in modelConfig");
-            _isAvailable = false;
-            return false;
+            WARN("DeepSeekProvider initModel warning,using default endpoint: https://api.deepseek.com");
+            _endpoint = "https://api.deepseek.com";
         }
-        _endpoint = it->second;
+        else _endpoint = it->second;
         _isAvailable = true;
         // 打印apikey和endpoint
         INFO("DeepSeekProvider initModel success, apiKey:{}, endpoint:{}", _apiKey, _endpoint);
@@ -44,7 +43,7 @@ namespace ai_chat_sdk
         return "一款实用性强,性能优越的中文对话模型，适用于各种对话场景，如客服、问答、闲聊等。";
     }
     // 发送消息,全量返回
-    std::string DeepSeekProvider::sendMessage(const std::vector<Message> &messages, const std::map<std::string, std::string> &requestParam)
+    std::string DeepSeekProvider::sendMessage(const std::vector<std::shared_ptr<Message>> &messages, const std::map<std::string, std::string> &requestParam)
     {
         // 1.检查模型是否可用
         if (_isAvailable == false)
@@ -70,8 +69,8 @@ namespace ai_chat_sdk
         for (const auto &message : messages)
         {
             Json::Value messageJson;
-            messageJson["role"] = message._role;
-            messageJson["content"] = message._content;
+            messageJson["role"] = message->_role;
+            messageJson["content"] = message->_content;
             messageArray.append(messageJson);
         }
         // 3.构造请求体
@@ -141,7 +140,7 @@ namespace ai_chat_sdk
         return "";
     }
     // 发送消息，增量返回
-    std::string DeepSeekProvider::sendMessageStream(const std::vector<Message> &messages,
+    std::string DeepSeekProvider::sendMessageStream(const std::vector<std::shared_ptr<Message>> &messages,
                                                     const std::map<std::string, std::string> &requestParam,
                                                     std::function<void(const std::string &, bool)> callback)
     {
@@ -169,8 +168,8 @@ namespace ai_chat_sdk
         for (const auto &message : messages)
         {
             Json::Value messageJson;
-            messageJson["role"] = message._role;
-            messageJson["content"] = message._content;
+            messageJson["role"] = message->_role;
+            messageJson["content"] = message->_content;
             messageArray.append(messageJson);
         }
         // 3.构造请求体

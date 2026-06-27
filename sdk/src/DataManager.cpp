@@ -222,7 +222,6 @@ namespace ai_chat_sdk
         while((ret = sqlite3_step(stmt)) == SQLITE_ROW)
         {
             sessionIds.push_back(reinterpret_cast<const char*>(sqlite3_column_text(stmt,0)));
-            ret = sqlite3_step(stmt);
         }
         if(ret != SQLITE_DONE)
         {
@@ -262,7 +261,6 @@ namespace ai_chat_sdk
             session->_createTime = static_cast<std::time_t>(sqlite3_column_int(stmt,3));
             session->_lastUpdateTime = static_cast<std::time_t>(sqlite3_column_int(stmt,4));
             sessions.push_back(session);
-            ret = sqlite3_step(stmt);
         }
         if(ret != SQLITE_DONE)
         {

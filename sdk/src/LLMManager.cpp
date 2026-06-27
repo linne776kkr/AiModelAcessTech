@@ -11,9 +11,12 @@ namespace ai_chat_sdk
             ERR("LLMProvider is nullptr");
             return false;
         }
+        //添加模型信息,ModelInfo其他字段暂空,待后续扩展
+        auto modelInfo = std::make_shared<ModelInfo>();
+        modelInfo->_modelName = modelName;
+        modelInfo->_modelDesc = provider->getModelDesc();
+        _modelInfos[modelName] = modelInfo;
         _providers[modelName] = std::move(provider);
-        //添加模型信息
-        _modelInfos[modelName] = ModelInfo(modelName);
         INFO("Register LLMProvider for model: {}", modelName);
         return true;
     }
@@ -31,19 +34,19 @@ namespace ai_chat_sdk
         if(isInit)
         {
             //更新模型信息
-            _modelInfos[modelName]._isAvailable = isInit;
-            _modelInfos[modelName]._modelDesc = it->second->getModelDesc();
+            _modelInfos[modelName]->_isAvailable = true;
+            _modelInfos[modelName]->_modelDesc = it->second->getModelDesc();
             return true;
         }
         return false;
     }
     //获取可用模型
-    std::vector<ModelInfo> LLMManager::getAvailableModels()
+    std::vector<std::shared_ptr<ModelInfo>> LLMManager::getAvailableModels()
     {
-        std::vector<ModelInfo> models;
+        std::vector<std::shared_ptr<ModelInfo>> models;
         for(auto &it : _modelInfos)
         {
-            if(!it.second._isAvailable)
+            if(!it.second->_isAvailable)
             {
                 models.push_back(it.second);
             }
@@ -53,17 +56,17 @@ namespace ai_chat_sdk
     //检查模型是否可用
     bool LLMManager::isModelAvailable(const std::string &modelName)
     {
-        auto it = _providers.find(modelName);
-        if(it == _providers.end())
+        auto it = _modelInfos.find(modelName);
+        if(it == _modelInfos.end())
         {
-            WARN("LLMProvider not registered for model: {}", modelName);
+            WARN("LLMProvider not registered fo rmodel: {}", modelName);
             return false;
         }
-        return it->second->isAvailable();
+        return it->second->_isAvailable;
     }
     //发送消息给指定模型
     std::string LLMManager::sendMessage(const std::string &modelName,
-                                        const std::vector<Message>& messages,
+                                        const std::vector<std::shared_ptr<Message>>& messages,
                                         const std::map<std::string,std::string>& requestParam)
     {
         auto it = _providers.find(modelName);
@@ -81,7 +84,7 @@ namespace ai_chat_sdk
     }
     //发送流式返回消息给指定模型
     std::string LLMManager::sendStreamMessage( const std::string& modelName,
-                            const std::vector<Message> &messages,
+                            const std::vector<std::shared_ptr<Message>>& messages,  
                             const std::map<std::string, std::string> &requestParam,
                             std::function<void(const std::string &, bool)> callback)
     {
