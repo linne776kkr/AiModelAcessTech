@@ -94,7 +94,7 @@ void callback(const std::string &content, bool isFinish)
 //     sdk->initModel(configs);
 //     ASSERT_TRUE(sdk->isInitialized());
 //     //创建会话
-//     std::string sessionId = sdk->createSession("deepseek-chat");
+//     std::string sessionId = sdk->createSession("deepseek-r1:1.5b");
 //     ASSERT_TRUE(!sessionId.empty());
 //     //获取指定会话
 //     auto session = sdk->getSession(sessionId);
