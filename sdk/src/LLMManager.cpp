@@ -46,11 +46,12 @@ namespace ai_chat_sdk
         std::vector<std::shared_ptr<ModelInfo>> models;
         for(auto &it : _modelInfos)
         {
-            if(!it.second->_isAvailable)
+            if(it.second->_isAvailable)
             {
                 models.push_back(it.second);
             }
         }
+        INFO("get available models, models count: {}", models.size());
         return models;
     }
     //检查模型是否可用

@@ -448,12 +448,13 @@ namespace ai_chat_sdk
     //初始化数据库--创建数据库表
     bool DataManager::initDatabase()
     {
+        executeSQL("PRAGMA foreign_keys = ON;");
         //创建会话表
         //sessions sessionId(string,primary key),sessionName(string),modelName(string),createTime(int),lastUpdateTime(int)
         std::string createSessionTablesSql = R"(
             CREATE TABLE IF NOT EXISTS sessions (
                 sessionId TEXT PRIMARY KEY,
-                sessionName TEXT NOT NULL,
+                sessionName TEXT DEFAULT '',
                 modelName TEXT NOT NULL,
                 createTime INTEGER NOT NULL,
                 lastUpdateTime INTEGER NOT NULL

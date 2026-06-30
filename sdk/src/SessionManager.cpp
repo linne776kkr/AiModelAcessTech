@@ -181,7 +181,7 @@ namespace ai_chat_sdk{
             auto it = _sessions.find(sessionId);
             if(it == _sessions.end())
             {
-                WARN("session not found, sessionId: %s", sessionId.c_str());
+                WARN("session not found, sessionId: {}", sessionId);
                 return false;
             }
             //删除会话
