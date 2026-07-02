@@ -67,18 +67,15 @@ namespace ai_chat_sdk{
     //获取指定会话
     const std::shared_ptr<Session> SessionManager::getSession(const std::string& sessionId)
     {
-        std::shared_ptr<Session> session = nullptr;
+        std::unique_lock<std::mutex> lock(_mutex);
+        //根据会话id获取会话
+        auto it = _sessions.find(sessionId);
+        if(it == _sessions.end())
         {
-            std::unique_lock<std::mutex> lock(_mutex);
-            //根据会话id获取会话
-            auto it = _sessions.find(sessionId);
-            if(it == _sessions.end())
-            {
-                WARN("session not found, sessionId: %s", sessionId.c_str());
-                return nullptr;
-            }
-            session = it->second;
+            WARN("session not found, sessionId: {}", sessionId);
+            return nullptr;
         }
+        std::shared_ptr<Session> session = it->second;
         //如果没有历史数据,查表恢复历史数据
         if(session->_messages.empty())
         {
@@ -131,6 +128,7 @@ namespace ai_chat_sdk{
     //获取指定会话的消息历史记录
     std::vector<std::shared_ptr<Message>> SessionManager::getHistoryMessage(std::shared_ptr<Session> session)
     {
+        std::unique_lock<std::mutex> lock(_mutex);
         return session->_messages;
     }
     //更新会话时间戳
@@ -143,7 +141,7 @@ namespace ai_chat_sdk{
             auto it = _sessions.find(sessionId);
             if(it == _sessions.end())
             {
-                WARN("session not found, sessionId: %s", sessionId.c_str());
+                WARN("session not found, sessionId: {}", sessionId);
                 return;
             }
             //更新会话最后更新时间戳

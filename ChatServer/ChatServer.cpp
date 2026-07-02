@@ -392,5 +392,11 @@ namespace ai_chat_server
     // 处理发送消息请求-增量返回
     _chatServer->Post("/api/message/async",[this](const httplib::Request& request, httplib::Response& response){
     handleSendMessageStreamRequest(request,response);});
+
+    // 静态文件服务
+    _chatServer->set_mount_point("/", "./www");
+    _chatServer->Get("/", [](const httplib::Request& req, httplib::Response& res) {
+        res.set_redirect("/index.html");
+    });
     }
 }// namespace ai_chat_server
